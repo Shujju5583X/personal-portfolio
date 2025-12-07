@@ -1,17 +1,9 @@
 {
-    "name": "matrix-portfolio-root",
+    "name": "matrix-portfolio",
     "version": "1.0.0",
     "scripts": {
         "postinstall": "cd client && npm install",
         "build": "cd client && npm run build",
-        "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\""
-    },
-    "dependencies": {
-        "express": "^4.18.2",
-        "serverless-http": "^3.2.0",
-        "cors": "^2.8.5"
-    },
-    "devDependencies": {
-        "concurrently": "^8.2.0"
+        "dev": "cd client && npm run dev"
     }
 }

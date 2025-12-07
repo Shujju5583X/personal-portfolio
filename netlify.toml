@@ -1,15 +1,10 @@
+# Netlify configuration for static SPA deployment
+
 [build]
   command = "npm run build"
   publish = "client/dist"
 
-[functions]
-  directory = "netlify/functions"
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
-
+# SPA routing - redirect all requests to index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
