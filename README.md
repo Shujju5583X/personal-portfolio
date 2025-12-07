@@ -127,7 +127,6 @@ Click anywhere to focus the terminal, then type:
 *VIT AP Campus, Amaravati*
 
 - 📧 [shujatullahsyed801@gmail.com](mailto:shujatullahsyed801@gmail.com)
-- 📱 +91 6305085183
 - 🐙 [github.com/Shujju5583X](https://github.com/Shujju5583X)
 
 ---
