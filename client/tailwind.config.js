@@ -7,15 +7,16 @@ export default {
     theme: {
         extend: {
             colors: {
-                matrix: {
-                    black: '#0d0d0d',
-                    green: '#00ff41',
-                    darkGreen: '#003b00',
+                hacker: {
+                    bg: '#121212',
+                    text: '#e0e0e0',
+                    accent: '#ffffff',
+                    muted: '#6b7280',
                 }
             },
             fontFamily: {
-                mono: ['"Courier New"', 'Courier', 'monospace'],
-                vt323: ['"VT323"', 'monospace'],
+                sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                mono: ['"Fira Code"', '"Courier New"', 'Courier', 'monospace'],
             },
             animation: {
                 'typing': 'typing 3.5s steps(40, end), blink-caret .75s step-end infinite',
@@ -27,7 +28,7 @@ export default {
                 },
                 'blink-caret': {
                     'from, to': { borderColor: 'transparent' },
-                    '50%': { borderColor: '#00ff41' },
+                    '50%': { borderColor: '#10b981' },
                 },
             }
         },

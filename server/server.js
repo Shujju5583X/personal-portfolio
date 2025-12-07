@@ -1,38 +1,82 @@
 const express = require('express');
 const cors = require('cors');
+const nodemailer = require('nodemailer');
+const { z } = require('zod');
+require('dotenv').config();
+
+const sequelize = require('./config/database');
+const Project = require('./models/Project');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
 
-// Dummy Data
-const projects = [
-    {
-        id: 1,
-        title: "Acclaim: AI-Based Sanctioning System",
-        description: "AI-driven sanctioning system to automate patient billing. Features ML model for sanctioning logic and IoT scalability via Raspberry Pi.",
-        tech: ["Python", "Machine Learning", "IoT", "Raspberry Pi"],
-        link: "#"
-    },
-    {
-        id: 2,
-        title: "E-Commerce Web Application",
-        description: "Full-stack online shopping platform. Focused on API syncing for real-time data consistency and performance optimization.",
-        tech: ["Web Development", "APIs", "Full Stack"],
-        link: "#"
-    }
-];
+// Database Connection and Sync
+sequelize.authenticate()
+    .then(() => {
+        console.log('Database connected...');
+        return sequelize.sync(); // Sync models with database
+    })
+    .then(() => console.log('Models synced...'))
+    .catch(err => console.log('Error: ' + err));
 
 // Routes
-app.get('/api/projects', (req, res) => {
-    res.json(projects);
+
+// GET /api/projects - Fetch from Database
+app.get('/api/projects', async (req, res) => {
+    try {
+        const projects = await Project.findAll();
+        res.json(projects);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server Error' });
+    }
 });
 
-app.post('/api/contact', (req, res) => {
-    const { name, email, message } = req.body;
-    console.log(`[CONTACT FORM] Name: ${name}, Email: ${email}, Message: ${message}`);
-    res.json({ success: true, message: "Message received in the matrix." });
+// Zod Schema for Contact Form
+const contactSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email address"),
+    message: z.string().min(1, "Message is required")
+});
+
+// POST /api/contact - Send Real Email
+app.post('/api/contact', async (req, res) => {
+    try {
+        // Validate input
+        const { name, email, message } = contactSchema.parse(req.body);
+
+        // Create Transporter
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+
+        // Mail Options
+        const mailOptions = {
+            from: email,
+            to: process.env.EMAIL_USER, // Send to yourself
+            subject: `Portfolio Contact: ${name}`,
+            text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
+        };
+
+        // Send Email
+        await transporter.sendMail(mailOptions);
+
+        res.json({ success: true, message: "Message sent successfully!" });
+
+    } catch (error) {
+        if (error instanceof z.ZodError) {
+            return res.status(400).json({ errors: error.errors });
+        }
+        console.error(error);
+        res.status(500).json({ success: false, message: "Failed to send message." });
+    }
 });
 
 app.listen(PORT, () => {
