@@ -201,13 +201,13 @@ const Terminal = () => {
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto p-4 h-[60vh] overflow-y-auto font-mono text-base" onClick={() => inputRef.current?.focus()}>
+        <div className="w-full max-w-4xl mx-auto p-2 sm:p-4 h-[50vh] sm:h-[60vh] overflow-y-auto font-mono text-xs sm:text-sm md:text-base" onClick={() => inputRef.current?.focus()}>
             {history.map((item, index) => (
-                <div key={index} className="mb-3">
+                <div key={index} className="mb-2 sm:mb-3">
                     {item.type === 'input' ? (
                         <div className="flex">
-                            <span className="mr-2 text-emerald-400">{'>'}</span>
-                            <span className="text-slate-100">{item.content}</span>
+                            <span className="mr-1 sm:mr-2 text-emerald-400">{'>'}</span>
+                            <span className="text-slate-100 break-all">{item.content}</span>
                         </div>
                     ) : (
                         <div className="text-slate-400 leading-relaxed">
@@ -218,14 +218,14 @@ const Terminal = () => {
             ))}
 
             <div className="flex items-center">
-                <span className="mr-2 text-emerald-400">{contactStep ? '?' : '>'}</span>
+                <span className="mr-1 sm:mr-2 text-emerald-400">{contactStep ? '?' : '>'}</span>
                 <input
                     ref={inputRef}
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="form-input bg-transparent border-none p-0 focus:ring-0 text-slate-100 w-full font-mono text-base caret-emerald-400"
+                    className="form-input bg-transparent border-none p-0 focus:ring-0 text-slate-100 w-full font-mono text-xs sm:text-sm md:text-base caret-emerald-400"
                     autoFocus
                 />
             </div>
