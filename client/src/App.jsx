@@ -1,28 +1,113 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Terminal from './components/Terminal';
 
 function App() {
+    // Smooth scroll behavior for navigation links
+    useEffect(() => {
+        const handleSmoothScroll = (e) => {
+            const target = e.target.closest('a[href^="#"]');
+            if (target) {
+                e.preventDefault();
+                const id = target.getAttribute('href').slice(1);
+                const element = document.getElementById(id);
+
+                if (element) {
+                    element.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Update URL without jumping
+                    window.history.pushState(null, '', `#${id}`);
+                }
+            }
+        };
+
+        // Keyboard shortcuts for quick navigation (Alt + 1-4)
+        const handleKeyboardShortcuts = (e) => {
+            if (e.altKey) {
+                const shortcuts = {
+                    '1': 'about',
+                    '2': 'projects',
+                    '3': 'skills',
+                    '4': 'contact'
+                };
+
+                if (shortcuts[e.key]) {
+                    e.preventDefault();
+                    const element = document.getElementById(shortcuts[e.key]);
+                    if (element) {
+                        element.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        window.history.pushState(null, '', `#${shortcuts[e.key]}`);
+                    }
+                }
+            }
+        };
+
+        document.addEventListener('click', handleSmoothScroll);
+        document.addEventListener('keydown', handleKeyboardShortcuts);
+
+        return () => {
+            document.removeEventListener('click', handleSmoothScroll);
+            document.removeEventListener('keydown', handleKeyboardShortcuts);
+        };
+    }, []);
+
     return (
         <div className="relative min-h-screen w-full bg-slate-900 text-slate-300 overflow-hidden">
             {/* Navbar */}
-            <nav className="navbar">
+            <nav className="navbar" role="navigation" aria-label="Main navigation">
                 <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div className="text-xl font-bold text-slate-100">
                         <span className="text-emerald-400">&lt;</span>
-                        Syed
+                        Shujatullah
                         <span className="text-emerald-400">/&gt;</span>
                     </div>
-                    <div className="flex gap-6">
-                        <a href="#about" className="nav-link">About</a>
-                        <a href="#projects" className="nav-link">Projects</a>
-                        <a href="#skills" className="nav-link">Skills</a>
-                        <a href="#contact" className="nav-link">Contact</a>
+                    <div className="flex gap-6" role="menubar">
+                        <a
+                            href="#about"
+                            className="nav-link"
+                            role="menuitem"
+                            tabIndex="0"
+                            aria-label="Navigate to About section (Alt+1)"
+                        >
+                            About
+                        </a>
+                        <a
+                            href="#projects"
+                            className="nav-link"
+                            role="menuitem"
+                            tabIndex="0"
+                            aria-label="Navigate to Projects section (Alt+2)"
+                        >
+                            Projects
+                        </a>
+                        <a
+                            href="#skills"
+                            className="nav-link"
+                            role="menuitem"
+                            tabIndex="0"
+                            aria-label="Navigate to Skills section (Alt+3)"
+                        >
+                            Skills
+                        </a>
+                        <a
+                            href="#contact"
+                            className="nav-link"
+                            role="menuitem"
+                            tabIndex="0"
+                            aria-label="Navigate to Contact section (Alt+4)"
+                        >
+                            Contact
+                        </a>
                     </div>
                 </div>
             </nav>
 
             {/* Hero Section */}
-            <section className="section-container pt-32 min-h-screen flex flex-col items-center justify-center">
+            <section id="hero" className="section-container pt-32 min-h-screen flex flex-col items-center justify-center">
                 <h1 className="heading-hero text-center mb-6">
                     System Interface
                 </h1>
@@ -38,7 +123,7 @@ function App() {
                             <div className="w-3 h-3 rounded-full bg-yellow-500/70"></div>
                             <div className="w-3 h-3 rounded-full bg-emerald-500/70"></div>
                         </div>
-                        <div className="text-xs text-slate-500 font-mono">syed@portfolio:~</div>
+                        <div className="text-xs text-slate-500 font-mono">shujatullah@portfolio:~</div>
                     </div>
                     <Terminal />
                 </div>
