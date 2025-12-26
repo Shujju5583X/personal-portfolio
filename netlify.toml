@@ -1,8 +1,12 @@
 # Netlify configuration for static SPA deployment
 
 [build]
+  base = "."
   command = "npm run build"
   publish = "client/dist"
+
+[build.environment]
+  NODE_VERSION = "18"
 
 # SPA routing - redirect all requests to index.html
 [[redirects]]
