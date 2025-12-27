@@ -25,7 +25,7 @@ Built as a **static Single Page Application (SPA)** with **dynamic GitHub integr
 ## 🛠️ Tech Stack
 
 | Category | Technologies |
-|----------|-------------|
+| -------- | ------------ |
 | **Frontend** | React 18, Vite |
 | **Styling** | Tailwind CSS, PostCSS |
 | **Language** | JavaScript (ES Modules) |
@@ -36,7 +36,7 @@ Built as a **static Single Page Application (SPA)** with **dynamic GitHub integr
 
 ## 📂 Project Structure
 
-```
+```text
 personal-portfolio/
 ├── client/                     # React Frontend
 │   ├── src/
@@ -93,7 +93,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 Click anywhere to focus the terminal, then type:
 
 | Command | Description |
-|---------|-------------|
+| ------- | ----------- |
 | `help` | Display available commands |
 | `about` | View professional summary & education |
 | `skills` | List technical skills & certifications |
@@ -104,7 +104,7 @@ Click anywhere to focus the terminal, then type:
 ### ⌨️ Keyboard Shortcuts
 
 | Shortcut | Action |
-|----------|--------|
+| -------- | ------ |
 | `Alt + 1` | Jump to About section |
 | `Alt + 2` | Jump to Projects section |
 | `Alt + 3` | Jump to Skills section |
