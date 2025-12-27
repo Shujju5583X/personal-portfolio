@@ -1,7 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Terminal from './components/Terminal';
+import MatrixRain from './components/MatrixRain';
 
 function App() {
+    // State for GitHub projects
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Fetch projects from GitHub API
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const response = await fetch('https://api.github.com/users/Shujju5583X/repos?sort=updated');
+                if (!response.ok) throw new Error('Failed to fetch');
+                const repos = await response.json();
+                const mappedProjects = repos.map(repo => ({
+                    id: repo.id,
+                    title: repo.name,
+                    description: repo.description || 'No description available',
+                    tech: repo.language ? [repo.language] : [],
+                    link: repo.html_url,
+                    period: new Date(repo.created_at).getFullYear().toString()
+                }));
+                setProjects(mappedProjects);
+            } catch (error) {
+                console.error('Error fetching GitHub repos:', error);
+                setProjects([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchProjects();
+    }, []);
+
     // Smooth scroll behavior for navigation links
     useEffect(() => {
         const handleSmoothScroll = (e) => {
@@ -57,6 +88,9 @@ function App() {
 
     return (
         <div className="relative min-h-screen w-full bg-slate-900 text-slate-300 overflow-hidden">
+            {/* Matrix Rain Background Effect */}
+            <MatrixRain />
+
             {/* Navbar */}
             <nav className="navbar sticky top-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-800" role="navigation" aria-label="Main navigation">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
@@ -125,7 +159,7 @@ function App() {
                         </div>
                         <div className="text-[10px] sm:text-xs text-slate-500 font-mono">shujatullah@portfolio:~</div>
                     </div>
-                    <Terminal />
+                    <Terminal projects={projects} loading={loading} />
                 </div>
             </section>
 
@@ -207,43 +241,34 @@ function App() {
             <section id="projects" className="section-container min-h-screen flex items-center justify-center py-16 sm:py-20">
                 <div className="max-w-4xl w-full px-4 sm:px-6">
                     <h2 className="text-3xl sm:text-4xl font-bold text-emerald-400 mb-6 sm:mb-8">Projects</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                        <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-300">
-                            <h3 className="text-2xl font-bold text-slate-100 mb-2">Acclaim: AI-Based Sanctioning System</h3>
-                            <div className="text-sm text-emerald-400/70 mb-3">Jul 2025 – Present</div>
-                            <p className="text-slate-400 leading-relaxed mb-4">
-                                Developing an AI-driven sanctioning system designed to automate and manage patient billing
-                                in medical fields. Engineered an efficient Machine Learning model to handle sanctioning logic,
-                                ensuring high accuracy in processing. Designed the system for IoT scalability by adapting the
-                                model for Raspberry Pi deployment, enabling remote operation via Bluetooth and Wi-Fi.
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                                <span className="tag">Python</span>
-                                <span className="tag">Machine Learning</span>
-                                <span className="tag">TensorFlow</span>
-                                <span className="tag">IoT</span>
-                                <span className="tag">Raspberry Pi</span>
-                            </div>
+                    {loading ? (
+                        <div className="text-center py-12">
+                            <div className="text-emerald-400 text-lg">Loading projects from GitHub...</div>
                         </div>
-
-                        <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-300">
-                            <h3 className="text-2xl font-bold text-slate-100 mb-2">E-Commerce Web Application</h3>
-                            <div className="text-sm text-emerald-400/70 mb-3">Jul 2023 – Nov 2023</div>
-                            <p className="text-slate-400 leading-relaxed mb-4">
-                                Built a functional online shopping platform to apply full-stack web development principles.
-                                Tackled complex backend challenges, specifically focusing on API syncing to ensure real-time
-                                data consistency across the application. Iterated on the codebase to resolve performance
-                                bottlenecks and logic errors, gaining deep insight into state management and data flow.
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                                <span className="tag">JavaScript</span>
-                                <span className="tag">React</span>
-                                <span className="tag">Node.js</span>
-                                <span className="tag">Express</span>
-                                <span className="tag">APIs</span>
-                            </div>
+                    ) : projects.length === 0 ? (
+                        <div className="text-center py-12">
+                            <div className="text-slate-400 text-lg">Unable to load projects. Please try again later.</div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                            {projects.map(project => (
+                                <div key={project.id} className="bg-slate-800/50 rounded-lg p-6 border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-300">
+                                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold text-slate-100 mb-2 hover:text-emerald-400 transition-colors block">
+                                        {project.title}
+                                    </a>
+                                    <div className="text-sm text-emerald-400/70 mb-3">Created: {project.period}</div>
+                                    <p className="text-slate-400 leading-relaxed mb-4">
+                                        {project.description}
+                                    </p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {project.tech.map(t => (
+                                            <span key={t} className="tag">{t}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 

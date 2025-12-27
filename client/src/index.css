@@ -87,3 +87,27 @@ body {
 .grid-responsive {
   @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
 }
+
+/* Screen reader only - for accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Touch-friendly improvements */
+@media (pointer: coarse) {
+  .nav-link {
+    @apply py-2 px-3 min-h-[44px] flex items-center;
+  }
+  
+  .tag {
+    @apply min-h-[32px] flex items-center;
+  }
+}

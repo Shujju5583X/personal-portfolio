@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { projectsData } from '../data/projects.js';
 
-const Terminal = () => {
+const Terminal = ({ projects = [], loading = false }) => {
     const [input, setInput] = useState('');
     const [history, setHistory] = useState([
         { type: 'output', content: 'Welcome to the Matrix. Type "help" to see available commands.' }
@@ -138,23 +137,31 @@ const Terminal = () => {
                 }]);
                 break;
             case 'projects':
-                const projectList = (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                        {projectsData.map(p => (
-                            <div key={p.id} className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-300 group">
-                                <div className="text-xl font-bold text-slate-100 group-hover:text-emerald-400 transition-colors mb-1">{p.title}</div>
-                                <div className="text-xs text-emerald-400/70 mb-2">{p.period}</div>
-                                <div className="text-sm text-slate-400 leading-relaxed mb-3">{p.description}</div>
-                                <div className="flex flex-wrap gap-2">
-                                    {p.tech.map(t => (
-                                        <span key={t} className="tag">{t}</span>
-                                    ))}
+                if (loading) {
+                    setHistory([...newHistory, { type: 'output', content: <span className="text-emerald-400">Fetching latest data from GitHub...</span> }]);
+                } else if (projects.length === 0) {
+                    setHistory([...newHistory, { type: 'output', content: <span className="text-slate-400">No projects found. Unable to fetch from GitHub.</span> }]);
+                } else {
+                    const projectList = (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                            {projects.map(p => (
+                                <div key={p.id} className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-300 group">
+                                    <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-slate-100 group-hover:text-emerald-400 transition-colors block mb-1">
+                                        {p.title}
+                                    </a>
+                                    <div className="text-xs text-emerald-400/70 mb-2">Created: {p.period}</div>
+                                    <div className="text-sm text-slate-400 leading-relaxed mb-3">{p.description}</div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {p.tech.map(t => (
+                                            <span key={t} className="tag">{t}</span>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                );
-                setHistory([...newHistory, { type: 'output', content: projectList }]);
+                            ))}
+                        </div>
+                    );
+                    setHistory([...newHistory, { type: 'output', content: projectList }]);
+                }
                 break;
             case 'contact':
                 setContactStep('name');
@@ -201,25 +208,42 @@ const Terminal = () => {
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto p-2 sm:p-4 h-[50vh] sm:h-[60vh] overflow-y-auto font-mono text-xs sm:text-sm md:text-base" onClick={() => inputRef.current?.focus()}>
-            {history.map((item, index) => (
-                <div key={index} className="mb-2 sm:mb-3">
-                    {item.type === 'input' ? (
-                        <div className="flex">
-                            <span className="mr-1 sm:mr-2 text-emerald-400">{'>'}</span>
-                            <span className="text-slate-100 break-all">{item.content}</span>
-                        </div>
-                    ) : (
-                        <div className="text-slate-400 leading-relaxed">
-                            {item.content}
-                        </div>
-                    )}
-                </div>
-            ))}
+        <div
+            className="w-full max-w-4xl mx-auto p-2 sm:p-4 h-[50vh] sm:h-[60vh] overflow-y-auto font-mono text-xs sm:text-sm md:text-base"
+            onClick={() => inputRef.current?.focus()}
+            role="log"
+            aria-label="Interactive terminal"
+        >
+            {/* Mobile hint - only visible on touch devices */}
+            <div className="sm:hidden text-xs text-slate-500 mb-2 text-center">
+                Tap here to type commands
+            </div>
+
+            {/* Terminal output with aria-live for screen readers */}
+            <div aria-live="polite" aria-atomic="false">
+                {history.map((item, index) => (
+                    <div key={index} className="mb-2 sm:mb-3">
+                        {item.type === 'input' ? (
+                            <div className="flex">
+                                <span className="mr-1 sm:mr-2 text-emerald-400" aria-hidden="true">{'>'}</span>
+                                <span className="text-slate-100 break-all">{item.content}</span>
+                            </div>
+                        ) : (
+                            <div className="text-slate-400 leading-relaxed">
+                                {item.content}
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
 
             <div className="flex items-center">
-                <span className="mr-1 sm:mr-2 text-emerald-400">{contactStep ? '?' : '>'}</span>
+                <span className="mr-1 sm:mr-2 text-emerald-400" aria-hidden="true">{contactStep ? '?' : '>'}</span>
+                <label htmlFor="terminal-input" className="sr-only">
+                    {contactStep ? `Enter your ${contactStep}` : 'Type a command'}
+                </label>
                 <input
+                    id="terminal-input"
                     ref={inputRef}
                     type="text"
                     value={input}
@@ -227,8 +251,11 @@ const Terminal = () => {
                     onKeyDown={handleKeyDown}
                     className="form-input bg-transparent border-none p-0 focus:ring-0 text-slate-100 w-full font-mono text-xs sm:text-sm md:text-base caret-emerald-400"
                     autoFocus
+                    placeholder={contactStep ? '' : 'Type a command...'}
+                    aria-describedby="terminal-hint"
                 />
             </div>
+            <div id="terminal-hint" className="sr-only">Type 'help' to see available commands</div>
             <div ref={bottomRef} />
         </div>
     );
