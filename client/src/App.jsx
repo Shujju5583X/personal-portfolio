@@ -57,6 +57,7 @@ function App() {
         const handleKeyboardShortcuts = (e) => {
             if (e.altKey) {
                 const shortcuts = {
+                    '0': 'hero',
                     '1': 'about',
                     '2': 'projects',
                     '3': 'skills',
@@ -100,6 +101,15 @@ function App() {
                         <span className="text-emerald-400">/&gt;</span>
                     </div>
                     <div className="flex gap-3 sm:gap-6 text-sm sm:text-base" role="menubar">
+                        <a
+                            href="#hero"
+                            className="nav-link"
+                            role="menuitem"
+                            tabIndex="0"
+                            aria-label="Navigate to Terminal section (Alt+0)"
+                        >
+                            Terminal
+                        </a>
                         <a
                             href="#about"
                             className="nav-link"
