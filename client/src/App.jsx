@@ -206,7 +206,7 @@ function App() {
                                     <span className="text-emerald-400 mt-1 text-sm sm:text-base">▸</span>
                                     <div>
                                         <div className="text-slate-200 font-semibold text-sm sm:text-base">VIT AP CAMPUS, Amaravati</div>
-                                        <div className="text-slate-400 text-xs sm:text-sm">M.Tech (Integrated) in CSE (2021-2026) - CGPA: 7.37/10</div>
+                                        <div className="text-slate-400 text-xs sm:text-sm">M.Tech (Integrated) in CSE (2021-2026) - CGPA: 7.50/10</div>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-2">
