@@ -24,13 +24,11 @@ Built as a **static Single Page Application (SPA)** with **dynamic GitHub integr
 
 ## 🛠️ Tech Stack
 
-| Category | Technologies |
-| -------- | ------------ |
-| **Frontend** | React 18, Vite |
-| **Styling** | Tailwind CSS, PostCSS |
-| **Language** | JavaScript (ES Modules) |
-| **Data Source** | GitHub REST API |
-| **Deployment** | Netlify |
+- **Frontend:** React 18, Vite
+- **Styling:** Tailwind CSS, PostCSS
+- **Language:** JavaScript (ES Modules)
+- **Data Source:** GitHub REST API
+- **Deployment:** Netlify
 
 ---
 
@@ -46,9 +44,9 @@ personal-portfolio/
 │   │   ├── App.jsx             # Main layout with GitHub API integration
 │   │   ├── main.jsx            # Entry point
 │   │   └── index.css           # Tailwind & custom styles
-│   ├── tailwind.config.js
-│   ├── postcss.config.js
-│   └── vite.config.js
+│   ├── tailwind.config.js      # Tailwind configuration
+│   ├── vite.config.js          # Vite build configuration
+│   └── package.json            # Client dependencies
 ├── netlify.toml                # Netlify deployment config
 ├── package.json                # Root scripts
 └── README.md
@@ -60,26 +58,26 @@ personal-portfolio/
 
 ### Prerequisites
 
-- **Node.js** v16 or higher
+- **Node.js** v18 or higher
 - **npm**
 
 ### Installation
 
 1. **Clone the repository:**
-
    ```bash
    git clone https://github.com/Shujju5583X/personal-portfolio.git
    cd personal-portfolio
    ```
 
 2. **Install dependencies:**
-
+   This command installs dependencies for both the root and client directories automatically via the `postinstall` script.
    ```bash
    npm install
    ```
 
 ### Running Locally
 
+Start the Vite development server:
 ```bash
 npm run dev
 ```
@@ -142,13 +140,11 @@ Each repository is mapped to display:
 
 ### GitHub Pages
 
-1. Build the project:
-
+1. Build the project locally:
    ```bash
    npm run build
    ```
-
-2. Deploy the `client/dist` folder
+2. Deploy the `client/dist` folder using `gh-pages` or manually upload.
 
 ---
 

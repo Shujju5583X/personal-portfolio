@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { personalInfo, education, skills, activities } from '../data/portfolioData';
 
 const Terminal = ({ projects = [], loading = false }) => {
     const [input, setInput] = useState('');
@@ -7,6 +8,10 @@ const Terminal = ({ projects = [], loading = false }) => {
     ]);
     const [contactStep, setContactStep] = useState(null);
     const [contactData, setContactData] = useState({ name: '', email: '', message: '' });
+
+    // Command history navigation
+    const [commandHistory, setCommandHistory] = useState([]);
+    const [historyIndex, setHistoryIndex] = useState(-1);
 
     const inputRef = useRef(null);
     const bottomRef = useRef(null);
@@ -20,9 +25,15 @@ const Terminal = ({ projects = [], loading = false }) => {
         }
     }, [history]);
 
-    const handleCommand = async (cmd) => {
+    const handleCommand = useCallback(async (cmd) => {
         const trimmedCmd = cmd.trim().toLowerCase();
         const newHistory = [...history, { type: 'input', content: cmd }];
+
+        // Save to command history (skip empty)
+        if (cmd.trim()) {
+            setCommandHistory(prev => [...prev, cmd.trim()]);
+            setHistoryIndex(-1);
+        }
 
         if (contactStep) {
             handleContactFlow(cmd, newHistory);
@@ -41,7 +52,9 @@ const Terminal = ({ projects = [], loading = false }) => {
                             <div className="pl-4 text-slate-400"><span className="text-emerald-400">projects</span> - View my work</div>
                             <div className="pl-4 text-slate-400"><span className="text-emerald-400">skills</span>   - Technical abilities</div>
                             <div className="pl-4 text-slate-400"><span className="text-emerald-400">contact</span>  - Get in touch</div>
+                            <div className="pl-4 text-slate-400"><span className="text-emerald-400">resume</span>   - Open my resume</div>
                             <div className="pl-4 text-slate-400"><span className="text-emerald-400">clear</span>    - Clear the terminal</div>
+                            <div className="mt-2 text-slate-500 text-xs">Tip: Use ↑/↓ arrow keys to navigate command history</div>
                         </div>
                     )
                 }]);
@@ -51,41 +64,33 @@ const Terminal = ({ projects = [], loading = false }) => {
                     type: 'output',
                     content: (
                         <div className="flex flex-col gap-3">
-                            <div className="text-2xl font-bold text-slate-100">Syed Shujatullah</div>
-                            <div className="text-emerald-400 font-medium">Full Stack Engineering Student (Integrated M.Tech)</div>
-                            <div className="text-slate-500 text-sm">+91 6305085183 | shujatullahsyed801@gmail.com | <a href="https://github.com/Shujju5583X" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">github.com/Shujju5583X</a></div>
+                            <div className="text-2xl font-bold text-slate-100">{personalInfo.name}</div>
+                            <div className="text-emerald-400 font-medium">{personalInfo.title}</div>
+                            <div className="text-slate-500 text-sm">{personalInfo.phone} | {personalInfo.email} | <a href={personalInfo.github.url} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">github.com/{personalInfo.github.username}</a></div>
                             <div className="mt-4">
                                 <div className="font-bold text-slate-100 mb-2">Professional Summary:</div>
-                                <div className="text-slate-400 leading-relaxed">Ambitious and hands-on developer with a strong foundation in the MERN stack and TypeScript. Fueled by curiosity and a passion for technology, I am deeply immersed in learning coding, web development, and data analysis. Currently building AI-driven solutions and seeking a challenging internship where I can take ownership of tasks, ship production-grade features, and demonstrate continuous growth in an ever-evolving field.</div>
+                                <div className="text-slate-400 leading-relaxed">{personalInfo.summary}</div>
                             </div>
                             <div className="mt-4">
                                 <div className="font-bold text-slate-100 mb-2">Education:</div>
                                 <div className="space-y-2">
-                                    <div className="flex items-start gap-2">
-                                        <span className="text-emerald-400">{'>'}</span>
-                                        <div className="text-slate-400"><span className="text-slate-200">VIT AP CAMPUS, Amaravati</span> (2021-2026): M.Tech (Integrated) in CSE - CGPA: 7.37/10</div>
-                                    </div>
-                                    <div className="flex items-start gap-2">
-                                        <span className="text-emerald-400">{'>'}</span>
-                                        <div className="text-slate-400"><span className="text-slate-200">Akansha Junior College</span> (2021): Senior Secondary (Science) - 76.10%</div>
-                                    </div>
-                                    <div className="flex items-start gap-2">
-                                        <span className="text-emerald-400">{'>'}</span>
-                                        <div className="text-slate-400"><span className="text-slate-200">Sree Narayana High School</span> (2019): Secondary - CGPA: 8.80/10</div>
-                                    </div>
+                                    {education.map((edu, i) => (
+                                        <div key={i} className="flex items-start gap-2">
+                                            <span className="text-emerald-400">{'>'}</span>
+                                            <div className="text-slate-400"><span className="text-slate-200">{edu.institution}</span> ({edu.period}): {edu.degree} - {edu.score}</div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                             <div className="mt-4">
                                 <div className="font-bold text-slate-100 mb-2">Activities & Interests:</div>
                                 <div className="space-y-1">
-                                    <div className="flex items-start gap-2">
-                                        <span className="text-emerald-400">{'>'}</span>
-                                        <span className="text-slate-400"><span className="text-slate-200">Competitive Coding:</span> Active participant in team coding contests.</span>
-                                    </div>
-                                    <div className="flex items-start gap-2">
-                                        <span className="text-emerald-400">{'>'}</span>
-                                        <span className="text-slate-400"><span className="text-slate-200">Technical Interests:</span> Coding, Web Development, Data Analysis.</span>
-                                    </div>
+                                    {activities.map((activity, i) => (
+                                        <div key={i} className="flex items-start gap-2">
+                                            <span className="text-emerald-400">{'>'}</span>
+                                            <span className="text-slate-400"><span className="text-slate-200">{activity.label}:</span> {activity.description}</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -101,7 +106,7 @@ const Terminal = ({ projects = [], loading = false }) => {
                                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
                                     <div className="font-bold text-emerald-400 mb-2">Languages</div>
                                     <div className="flex flex-wrap gap-2">
-                                        {['JavaScript', 'TypeScript', 'Python', 'Java', 'HTML5', 'CSS3'].map(skill => (
+                                        {skills.languages.map(skill => (
                                             <span key={skill} className="tag">{skill}</span>
                                         ))}
                                     </div>
@@ -109,7 +114,7 @@ const Terminal = ({ projects = [], loading = false }) => {
                                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
                                     <div className="font-bold text-emerald-400 mb-2">Frameworks</div>
                                     <div className="flex flex-wrap gap-2">
-                                        {['Node.js', 'React', 'Express.js'].map(skill => (
+                                        {skills.frameworks.map(skill => (
                                             <span key={skill} className="tag">{skill}</span>
                                         ))}
                                     </div>
@@ -117,7 +122,7 @@ const Terminal = ({ projects = [], loading = false }) => {
                                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
                                     <div className="font-bold text-emerald-400 mb-2">Tools & Technologies</div>
                                     <div className="flex flex-wrap gap-2">
-                                        {['APIs', 'Machine Learning', 'TensorFlow', 'IoT (Raspberry Pi)'].map(skill => (
+                                        {skills.tools.map(skill => (
                                             <span key={skill} className="tag">{skill}</span>
                                         ))}
                                     </div>
@@ -125,10 +130,12 @@ const Terminal = ({ projects = [], loading = false }) => {
                                 <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
                                     <div className="font-bold text-emerald-400 mb-2">Certifications</div>
                                     <div className="space-y-2">
-                                        <div className="text-slate-400">
-                                            <span className="tag">AI Using Google TensorFlow</span>
-                                            <span className="text-slate-500 text-sm ml-2">Smart Bridge, Powered by Google Developers (Jun 2024)</span>
-                                        </div>
+                                        {skills.certifications.map((cert, i) => (
+                                            <div key={i} className="text-slate-400">
+                                                <span className="tag">{cert.name}</span>
+                                                <span className="text-slate-500 text-sm ml-2">{cert.issuer} ({cert.date})</span>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -163,6 +170,23 @@ const Terminal = ({ projects = [], loading = false }) => {
                     setHistory([...newHistory, { type: 'output', content: projectList }]);
                 }
                 break;
+            case 'resume':
+                setHistory([...newHistory, {
+                    type: 'output',
+                    content: (
+                        <div className="flex flex-col gap-2">
+                            <span className="text-emerald-400">Opening resume...</span>
+                            <span className="text-slate-400 text-sm">
+                                If it didn't open automatically:{' '}
+                                <a href={personalInfo.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">
+                                    Click here to download
+                                </a>
+                            </span>
+                        </div>
+                    )
+                }]);
+                window.open(personalInfo.resumeUrl, '_blank');
+                break;
             case 'contact':
                 setContactStep('name');
                 setHistory([...newHistory, { type: 'output', content: <span className="text-emerald-400">Initiating secure connection...</span> }, { type: 'output', content: 'Enter your Name:' }]);
@@ -176,7 +200,7 @@ const Terminal = ({ projects = [], loading = false }) => {
             default:
                 setHistory([...newHistory, { type: 'output', content: <span className="text-red-400">Command not found: {cmd}. Type "help" for assistance.</span> }]);
         }
-    };
+    }, [history, contactStep, contactData, projects, loading]);
 
     const handleContactFlow = async (value, currentHistory) => {
         if (contactStep === 'name') {
@@ -192,10 +216,28 @@ const Terminal = ({ projects = [], loading = false }) => {
             setContactStep(null);
             setHistory([...currentHistory, { type: 'output', content: <span className="text-emerald-400">Transmitting data...</span> }]);
 
-            // Simulated contact form submission (no backend)
-            setTimeout(() => {
-                setHistory(prev => [...prev, { type: 'output', content: <span className="text-emerald-400">✓ Message transmitted to the mainframe (Local Simulation).</span> }]);
-            }, 1000);
+            // Attempt to send via Formspree (replace YOUR_FORM_ID with actual ID)
+            // For now, falls back to mailto link
+            try {
+                const mailtoLink = `mailto:${personalInfo.email}?subject=Portfolio Contact from ${finalData.name}&body=${encodeURIComponent(`Name: ${finalData.name}\nEmail: ${finalData.email}\nMessage: ${finalData.message}`)}`;
+                setTimeout(() => {
+                    setHistory(prev => [...prev, {
+                        type: 'output',
+                        content: (
+                            <div className="flex flex-col gap-1">
+                                <span className="text-emerald-400">✓ Message prepared.</span>
+                                <a href={mailtoLink} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline text-sm">
+                                    → Click here to send via email client
+                                </a>
+                            </div>
+                        )
+                    }]);
+                }, 1000);
+            } catch {
+                setTimeout(() => {
+                    setHistory(prev => [...prev, { type: 'output', content: <span className="text-red-400">Error transmitting. Please email directly at {personalInfo.email}</span> }]);
+                }, 1000);
+            }
             setContactData({ name: '', email: '', message: '' });
         }
     };
@@ -204,6 +246,27 @@ const Terminal = ({ projects = [], loading = false }) => {
         if (e.key === 'Enter') {
             handleCommand(input);
             setInput('');
+        } else if (e.key === 'ArrowUp') {
+            // Navigate backward through command history
+            e.preventDefault();
+            if (commandHistory.length === 0) return;
+            const newIndex = historyIndex === -1
+                ? commandHistory.length - 1
+                : Math.max(0, historyIndex - 1);
+            setHistoryIndex(newIndex);
+            setInput(commandHistory[newIndex]);
+        } else if (e.key === 'ArrowDown') {
+            // Navigate forward through command history
+            e.preventDefault();
+            if (commandHistory.length === 0 || historyIndex === -1) return;
+            const newIndex = historyIndex + 1;
+            if (newIndex >= commandHistory.length) {
+                setHistoryIndex(-1);
+                setInput('');
+            } else {
+                setHistoryIndex(newIndex);
+                setInput(commandHistory[newIndex]);
+            }
         }
     };
 

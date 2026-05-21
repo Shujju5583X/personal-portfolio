@@ -111,3 +111,77 @@ body {
     @apply min-h-[32px] flex items-center;
   }
 }
+
+/* ============================================
+   CRT Scanline Overlay
+   Subtle horizontal scanlines that mimic an
+   old CRT monitor for the Matrix aesthetic.
+   ============================================ */
+.crt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.03) 0px,
+    rgba(0, 0, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  animation: crt-flicker 0.15s infinite;
+}
+
+@keyframes crt-flicker {
+  0%   { opacity: 0.97; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.98; }
+}
+
+/* ============================================
+   Matrix-Style Loading Bar Animation
+   Used in the Projects section while fetching
+   GitHub API data.
+   ============================================ */
+.matrix-loader {
+  animation: matrix-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes matrix-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+.loading-bar {
+  display: inline-block;
+  width: 200px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(16, 185, 129, 0.8),
+    transparent
+  );
+  animation: loading-sweep 1.5s ease-in-out infinite;
+}
+
+@keyframes loading-sweep {
+  0%   { left: -100%; }
+  100% { left: 100%; }
+}
