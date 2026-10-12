@@ -28,35 +28,9 @@ body {
   @apply bg-slate-600;
 }
 
-/* Typography utilities */
-.heading-hero {
-  @apply text-5xl md:text-6xl font-bold text-slate-100 tracking-tight;
-}
-
-.heading-section {
-  @apply text-3xl md:text-4xl font-bold text-slate-100 tracking-tight mb-12 text-center;
-}
-
-.body-text {
-  @apply text-slate-400 leading-relaxed;
-}
-
-/* Button components */
-.btn-primary {
-  @apply bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium transition-all shadow-lg hover:shadow-emerald-500/20;
-}
-
-.btn-secondary {
-  @apply border border-slate-700 hover:border-slate-500 text-slate-300 px-6 py-3 rounded-lg transition-colors;
-}
-
 /* Card component */
 .card {
   @apply bg-slate-800 rounded-xl p-6 border border-slate-700/50 hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-xl transition-all duration-300;
-}
-
-.card-title {
-  @apply text-xl font-semibold text-slate-100 group-hover:text-emerald-400 transition-colors;
 }
 
 /* Tag/Badge component */
@@ -83,22 +57,8 @@ body {
   @apply max-w-6xl mx-auto px-6 py-20;
 }
 
-/* Grid layouts */
-.grid-responsive {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
-}
-
-/* Screen reader only - for accessibility */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+html {
+  scroll-behavior: smooth;
 }
 
 /* Touch-friendly improvements */

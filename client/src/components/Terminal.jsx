@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { personalInfo, education, skills, activities } from '../data/portfolioData';
+import { useState, useEffect, useRef } from 'react';
+import { createGmailLink, personalInfo } from '../data/portfolioData';
+import { Bio } from './sections/About';
+import { SkillsGrid } from './sections/Skills';
+import { ProjectCard } from './sections/Projects';
 
 const Terminal = ({ projects = [], loading = false }) => {
     const [input, setInput] = useState('');
@@ -14,18 +17,28 @@ const Terminal = ({ projects = [], loading = false }) => {
     const [historyIndex, setHistoryIndex] = useState(-1);
 
     const inputRef = useRef(null);
-    const bottomRef = useRef(null);
+    const terminalRef = useRef(null);
+    const shouldAutoScrollRef = useRef(true);
 
     useEffect(() => {
         if (inputRef.current) {
             inputRef.current.focus();
         }
-        if (bottomRef.current) {
-            bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+
+        if (terminalRef.current && shouldAutoScrollRef.current) {
+            terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
         }
     }, [history]);
 
-    const handleCommand = useCallback(async (cmd) => {
+    const handleTerminalScroll = () => {
+        const el = terminalRef.current;
+        if (!el) return;
+
+        const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
+        shouldAutoScrollRef.current = isNearBottom;
+    };
+
+    const handleCommand = (cmd) => {
         const trimmedCmd = cmd.trim().toLowerCase();
         const newHistory = [...history, { type: 'input', content: cmd }];
 
@@ -60,88 +73,10 @@ const Terminal = ({ projects = [], loading = false }) => {
                 }]);
                 break;
             case 'about':
-                setHistory([...newHistory, {
-                    type: 'output',
-                    content: (
-                        <div className="flex flex-col gap-3">
-                            <div className="text-2xl font-bold text-slate-100">{personalInfo.name}</div>
-                            <div className="text-emerald-400 font-medium">{personalInfo.title}</div>
-                            <div className="text-slate-500 text-sm">{personalInfo.phone} | {personalInfo.email} | <a href={personalInfo.github.url} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">github.com/{personalInfo.github.username}</a></div>
-                            <div className="mt-4">
-                                <div className="font-bold text-slate-100 mb-2">Professional Summary:</div>
-                                <div className="text-slate-400 leading-relaxed">{personalInfo.summary}</div>
-                            </div>
-                            <div className="mt-4">
-                                <div className="font-bold text-slate-100 mb-2">Education:</div>
-                                <div className="space-y-2">
-                                    {education.map((edu, i) => (
-                                        <div key={i} className="flex items-start gap-2">
-                                            <span className="text-emerald-400">{'>'}</span>
-                                            <div className="text-slate-400"><span className="text-slate-200">{edu.institution}</span> ({edu.period}): {edu.degree} - {edu.score}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="mt-4">
-                                <div className="font-bold text-slate-100 mb-2">Activities & Interests:</div>
-                                <div className="space-y-1">
-                                    {activities.map((activity, i) => (
-                                        <div key={i} className="flex items-start gap-2">
-                                            <span className="text-emerald-400">{'>'}</span>
-                                            <span className="text-slate-400"><span className="text-slate-200">{activity.label}:</span> {activity.description}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }]);
+                setHistory([...newHistory, { type: 'output', content: <Bio /> }]);
                 break;
             case 'skills':
-                setHistory([...newHistory, {
-                    type: 'output',
-                    content: (
-                        <div className="flex flex-col gap-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
-                                    <div className="font-bold text-emerald-400 mb-2">Languages</div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {skills.languages.map(skill => (
-                                            <span key={skill} className="tag">{skill}</span>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
-                                    <div className="font-bold text-emerald-400 mb-2">Frameworks</div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {skills.frameworks.map(skill => (
-                                            <span key={skill} className="tag">{skill}</span>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
-                                    <div className="font-bold text-emerald-400 mb-2">Tools & Technologies</div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {skills.tools.map(skill => (
-                                            <span key={skill} className="tag">{skill}</span>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50">
-                                    <div className="font-bold text-emerald-400 mb-2">Certifications</div>
-                                    <div className="space-y-2">
-                                        {skills.certifications.map((cert, i) => (
-                                            <div key={i} className="text-slate-400">
-                                                <span className="tag">{cert.name}</span>
-                                                <span className="text-slate-500 text-sm ml-2">{cert.issuer} ({cert.date})</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }]);
+                setHistory([...newHistory, { type: 'output', content: <SkillsGrid /> }]);
                 break;
             case 'projects':
                 if (loading) {
@@ -150,20 +85,9 @@ const Terminal = ({ projects = [], loading = false }) => {
                     setHistory([...newHistory, { type: 'output', content: <span className="text-slate-400">No projects found. Unable to fetch from GitHub.</span> }]);
                 } else {
                     const projectList = (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-2">
                             {projects.map(p => (
-                                <div key={p.id} className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-300 group">
-                                    <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-slate-100 group-hover:text-emerald-400 transition-colors block mb-1">
-                                        {p.title}
-                                    </a>
-                                    <div className="text-xs text-emerald-400/70 mb-2">Created: {p.period}</div>
-                                    <div className="text-sm text-slate-400 leading-relaxed mb-3">{p.description}</div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {p.tech.map(t => (
-                                            <span key={t} className="tag">{t}</span>
-                                        ))}
-                                    </div>
-                                </div>
+                                <ProjectCard key={p.id} project={p} />
                             ))}
                         </div>
                     );
@@ -200,9 +124,9 @@ const Terminal = ({ projects = [], loading = false }) => {
             default:
                 setHistory([...newHistory, { type: 'output', content: <span className="text-red-400">Command not found: {cmd}. Type "help" for assistance.</span> }]);
         }
-    }, [history, contactStep, contactData, projects, loading]);
+    };
 
-    const handleContactFlow = async (value, currentHistory) => {
+    const handleContactFlow = (value, currentHistory) => {
         if (contactStep === 'name') {
             setContactData({ ...contactData, name: value });
             setContactStep('email');
@@ -216,28 +140,24 @@ const Terminal = ({ projects = [], loading = false }) => {
             setContactStep(null);
             setHistory([...currentHistory, { type: 'output', content: <span className="text-emerald-400">Transmitting data...</span> }]);
 
-            // Attempt to send via Formspree (replace YOUR_FORM_ID with actual ID)
-            // For now, falls back to mailto link
-            try {
-                const mailtoLink = `mailto:${personalInfo.email}?subject=Portfolio Contact from ${finalData.name}&body=${encodeURIComponent(`Name: ${finalData.name}\nEmail: ${finalData.email}\nMessage: ${finalData.message}`)}`;
-                setTimeout(() => {
-                    setHistory(prev => [...prev, {
-                        type: 'output',
-                        content: (
-                            <div className="flex flex-col gap-1">
-                                <span className="text-emerald-400">✓ Message prepared.</span>
-                                <a href={mailtoLink} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline text-sm">
-                                    → Click here to send via email client
-                                </a>
-                            </div>
-                        )
-                    }]);
-                }, 1000);
-            } catch {
-                setTimeout(() => {
-                    setHistory(prev => [...prev, { type: 'output', content: <span className="text-red-400">Error transmitting. Please email directly at {personalInfo.email}</span> }]);
-                }, 1000);
-            }
+            const gmailLink = createGmailLink({
+                to: personalInfo.email,
+                subject: `Portfolio Contact from ${finalData.name}`,
+                body: `Name: ${finalData.name}\nEmail: ${finalData.email}\nMessage: ${finalData.message}`,
+            });
+            setTimeout(() => {
+                setHistory(prev => [...prev, {
+                    type: 'output',
+                    content: (
+                        <div className="flex flex-col gap-1">
+                            <span className="text-emerald-400">✓ Message prepared.</span>
+                            <a href={gmailLink} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline text-sm">
+                                → Click here to send via Gmail
+                            </a>
+                        </div>
+                    )
+                }]);
+            }, 1000);
             setContactData({ name: '', email: '', message: '' });
         }
     };
@@ -272,8 +192,10 @@ const Terminal = ({ projects = [], loading = false }) => {
 
     return (
         <div
+            ref={terminalRef}
             className="w-full max-w-4xl mx-auto p-2 sm:p-4 h-[50vh] sm:h-[60vh] overflow-y-auto font-mono text-xs sm:text-sm md:text-base"
             onClick={() => inputRef.current?.focus()}
+            onScroll={handleTerminalScroll}
             role="log"
             aria-label="Interactive terminal"
         >
@@ -313,13 +235,11 @@ const Terminal = ({ projects = [], loading = false }) => {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     className="form-input bg-transparent border-none p-0 focus:ring-0 text-slate-100 w-full font-mono text-xs sm:text-sm md:text-base caret-emerald-400"
-                    autoFocus
                     placeholder={contactStep ? '' : 'Type a command...'}
                     aria-describedby="terminal-hint"
                 />
             </div>
             <div id="terminal-hint" className="sr-only">Type 'help' to see available commands</div>
-            <div ref={bottomRef} />
         </div>
     );
 };

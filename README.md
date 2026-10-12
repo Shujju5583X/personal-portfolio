@@ -1,164 +1,104 @@
-# 🟢 Matrix Terminal Portfolio
+# Syed Shujatullah | Portfolio
 
-> *"Welcome to the Real World."*
+A modern, terminal-inspired personal portfolio built with React, Vite, and Tailwind CSS. The site presents a digital "Matrix" interface where visitors can explore bio, skills, projects, and contact options using command-style interactions.
 
-An immersive, interactive portfolio website inspired by **The Matrix**. This project replaces traditional web navigation with a functional Command Line Interface (CLI), featuring a sleek dark theme with emerald accents.
+## Overview
 
-Built as a **static Single Page Application (SPA)** with **dynamic GitHub integration** — no backend required. Deploy to GitHub Pages, Netlify, or any static hosting.
+This portfolio is designed to feel like a developer console rather than a traditional static website. The UI includes:
 
----
+- a Matrix rain background animation
+- a terminal-style command interface
+- dynamic GitHub project fetching
+- responsive sections for about, projects, skills, and contact
+- a polished dark neon aesthetic
 
-## ⚡ Features
+## Tech Stack
 
-- **🖥️ Interactive Terminal** — Navigate the site using commands like `help`, `about`, `projects`, and `skills`
-- **🔄 Dynamic GitHub Integration** — Projects are fetched live from the GitHub API
-- **🌧️ Matrix Rain Effect** — Custom HTML5 Canvas animation rendering the iconic falling code
-- **📺 Modern Dark Theme** — Sleek slate and emerald color scheme with smooth transitions
-- **📨 Contact Simulation** — Interactive multi-step contact form within the terminal
-- **📱 Responsive Design** — Fully responsive layout optimized for mobile and desktop
-- **⌨️ Keyboard Shortcuts** — Use `Alt + 1-4` for quick section navigation
-- **♿ Accessible** — ARIA labels, semantic HTML, and keyboard navigation support
-- **⚡ Static SPA** — No backend or database required — deploy anywhere
+- React
+- Vite
+- Tailwind CSS
+- JavaScript
+- GitHub REST API
 
----
-
-## 🛠️ Tech Stack
-
-- **Frontend:** React 18, Vite
-- **Styling:** Tailwind CSS, PostCSS
-- **Language:** JavaScript (ES Modules)
-- **Data Source:** GitHub REST API
-- **Deployment:** Netlify
-
----
-
-## 📂 Project Structure
+## Project Structure
 
 ```text
 personal-portfolio/
-├── client/                     # React Frontend
+├── client/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Terminal.jsx    # Main CLI interface
-│   │   │   └── MatrixRain.jsx  # Canvas rain animation
-│   │   ├── App.jsx             # Main layout with GitHub API integration
-│   │   ├── main.jsx            # Entry point
-│   │   └── index.css           # Tailwind & custom styles
-│   ├── tailwind.config.js      # Tailwind configuration
-│   ├── vite.config.js          # Vite build configuration
-│   └── package.json            # Client dependencies
-├── netlify.toml                # Netlify deployment config
-├── package.json                # Root scripts
-└── README.md
+│   │   ├── data/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   └── index.html
+├── package.json
+├── netlify.toml
+├── .gitignore
+├── README.md
+└── .nvmrc
 ```
 
----
+## Features
 
-## 🚀 Getting Started
+- Terminal-style navigation with commands such as `help`, `about`, `skills`, `projects`, `resume`, and `contact`
+- GitHub repositories loaded dynamically in the portfolio
+- Responsive layout for desktop and mobile screens
+- Custom animated background for the Matrix-inspired theme
+- Contact flow that opens a prefilled Gmail compose window using the user's details
 
-### Prerequisites
+## Prerequisites
 
-- **Node.js** v18 or higher
-- **npm**
+- Node.js 20+
+- npm
 
-### Installation
+## Installation
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Shujju5583X/personal-portfolio.git
-   cd personal-portfolio
-   ```
+```bash
+git clone https://github.com/Shujju5583X/personal-portfolio.git
+cd personal-portfolio
+npm install
+```
 
-2. **Install dependencies:**
-   This command installs dependencies for both the root and client directories automatically via the `postinstall` script.
-   ```bash
-   npm install
-   ```
+## Run locally
 
-### Running Locally
+From the project root:
 
-Start the Vite development server:
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Then open:
 
----
-
-## 🎮 Terminal Commands
-
-Click anywhere to focus the terminal, then type:
-
-| Command | Description |
-| ------- | ----------- |
-| `help` | Display available commands |
-| `about` | View professional summary & education |
-| `skills` | List technical skills & certifications |
-| `projects` | Browse project portfolio (fetched from GitHub) |
-| `contact` | Start interactive contact form |
-| `clear` | Clear the terminal screen |
-
-### ⌨️ Keyboard Shortcuts
-
-| Shortcut | Action |
-| -------- | ------ |
-| `Alt + 1` | Jump to About section |
-| `Alt + 2` | Jump to Projects section |
-| `Alt + 3` | Jump to Skills section |
-| `Alt + 4` | Jump to Contact section |
-
----
-
-## 🔄 GitHub API Integration
-
-Projects are dynamically fetched from the GitHub API at runtime:
-
-```javascript
-fetch('https://api.github.com/users/Shujju5583X/repos?sort=updated')
+```text
+http://localhost:5173/
 ```
 
-Each repository is mapped to display:
+## Production build
 
-- **Title** — Repository name
-- **Description** — Repository description
-- **Tech** — Primary language
-- **Period** — Year created
-- **Link** — Direct link to GitHub repository
+```bash
+npm run build
+```
 
----
+This builds the client app for production output inside the `client/dist` directory.
 
-## 🚀 Deployment
+## Deployment
 
-### Netlify (Recommended)
+The project is configured for Netlify and can be deployed using the existing `netlify.toml` file.
 
-1. Push to GitHub
-2. Connect repository to Netlify
-3. Netlify auto-detects settings from `netlify.toml`:
-   - **Build Command:** `npm run build`
-   - **Publish Directory:** `client/dist`
+## Notes
 
-### GitHub Pages
+- The portfolio uses the GitHub API to render repository data in real time.
+- Email links open Gmail in a new tab with the recipient and message details prefilled.
+- If GitHub rate limits are reached, the app falls back gracefully to an empty project list.
+- The site is intentionally static and does not require a backend.
 
-1. Build the project locally:
-   ```bash
-   npm run build
-   ```
-2. Deploy the `client/dist` folder using `gh-pages` or manually upload.
+## Author
 
----
+Syed Shujatullah
 
-## 👨‍💻 Author
-
-**Syed Shujatullah**  
-*Full Stack Engineering Student (Integrated M.Tech)*  
-*VIT AP Campus, Amaravati*
-
-- 📧 [shujatullahsyed801@gmail.com](mailto:shujatullahsyed801@gmail.com)
-- 🐙 [github.com/Shujju5583X](https://github.com/Shujju5583X)
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
+- GitHub: https://github.com/Shujju5583X
+- Portfolio: https://shujatullah.netlify.app/

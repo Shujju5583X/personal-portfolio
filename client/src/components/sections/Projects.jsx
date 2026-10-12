@@ -1,4 +1,19 @@
-import React from 'react';
+export const ProjectCard = ({ project }) => (
+    <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-300">
+        <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold text-slate-100 mb-2 hover:text-emerald-400 transition-colors block">
+            {project.title}
+        </a>
+        <div className="text-sm text-emerald-400/70 mb-3">Created: {project.period}</div>
+        <p className="text-slate-400 leading-relaxed mb-4">
+            {project.description}
+        </p>
+        <div className="flex flex-wrap gap-2">
+            {project.tech.map(t => (
+                <span key={t} className="tag">{t}</span>
+            ))}
+        </div>
+    </div>
+);
 
 const Projects = ({ projects, loading }) => {
     return (
@@ -22,20 +37,7 @@ const Projects = ({ projects, loading }) => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                         {projects.map(project => (
-                            <div key={project.id} className="bg-slate-800/50 rounded-lg p-6 border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-300">
-                                <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold text-slate-100 mb-2 hover:text-emerald-400 transition-colors block">
-                                    {project.title}
-                                </a>
-                                <div className="text-sm text-emerald-400/70 mb-3">Created: {project.period}</div>
-                                <p className="text-slate-400 leading-relaxed mb-4">
-                                    {project.description}
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                    {project.tech.map(t => (
-                                        <span key={t} className="tag">{t}</span>
-                                    ))}
-                                </div>
-                            </div>
+                            <ProjectCard key={project.id} project={project} />
                         ))}
                     </div>
                 )}

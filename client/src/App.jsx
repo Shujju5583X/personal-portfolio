@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { navLinks, personalInfo } from './data/portfolioData';
+import { useState, useEffect } from 'react';
+import { personalInfo } from './data/portfolioData';
 import Navbar from './components/Navbar';
 import MatrixRain from './components/MatrixRain';
 import Hero from './components/sections/Hero';
@@ -64,56 +64,6 @@ function App() {
             }
         };
         fetchProjects();
-    }, []);
-
-    // Smooth scroll behavior for navigation links
-    useEffect(() => {
-        const handleSmoothScroll = (e) => {
-            const target = e.target.closest('a[href^="#"]');
-            if (target) {
-                e.preventDefault();
-                const id = target.getAttribute('href').slice(1);
-                const element = document.getElementById(id);
-
-                if (element) {
-                    element.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                    window.history.pushState(null, '', `#${id}`);
-                }
-            }
-        };
-
-        // Keyboard shortcuts for quick navigation (Alt + 0-4)
-        const handleKeyboardShortcuts = (e) => {
-            if (e.altKey) {
-                const shortcutMap = {};
-                navLinks.forEach(link => {
-                    shortcutMap[link.shortcut] = link.href.slice(1);
-                });
-
-                if (shortcutMap[e.key]) {
-                    e.preventDefault();
-                    const element = document.getElementById(shortcutMap[e.key]);
-                    if (element) {
-                        element.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                        window.history.pushState(null, '', `#${shortcutMap[e.key]}`);
-                    }
-                }
-            }
-        };
-
-        document.addEventListener('click', handleSmoothScroll);
-        document.addEventListener('keydown', handleKeyboardShortcuts);
-
-        return () => {
-            document.removeEventListener('click', handleSmoothScroll);
-            document.removeEventListener('keydown', handleKeyboardShortcuts);
-        };
     }, []);
 
     return (

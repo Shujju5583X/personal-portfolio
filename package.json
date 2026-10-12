@@ -1,12 +1,11 @@
 {
     "name": "matrix-portfolio",
     "version": "1.0.0",
+    "workspaces": [
+        "client"
+    ],
     "scripts": {
-        "postinstall": "cd client && npm install",
-        "build": "cd client && npm run build",
-        "dev": "cd client && npm run dev"
-    },
-    "devDependencies": {
-        "baseline-browser-mapping": "^2.10.31"
+        "build": "npm run build -w client",
+        "dev": "npm run dev -w client"
     }
 }

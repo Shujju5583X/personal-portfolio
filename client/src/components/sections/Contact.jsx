@@ -1,5 +1,4 @@
-import React from 'react';
-import { personalInfo } from '../../data/portfolioData';
+import { createGmailLink, personalInfo } from '../../data/portfolioData';
 
 const Contact = () => {
     return (
@@ -16,7 +15,12 @@ const Contact = () => {
                             <span className="text-emerald-400 text-lg sm:text-xl mt-0.5 sm:mt-0">📧</span>
                             <div className="min-w-0 flex-1">
                                 <div className="text-slate-300 font-semibold text-sm sm:text-base">Email</div>
-                                <a href={`mailto:${personalInfo.email}`} className="text-emerald-400 hover:underline text-xs sm:text-sm break-all">
+                                <a
+                                    href={createGmailLink({ subject: 'Portfolio Inquiry' })}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-emerald-400 hover:underline text-xs sm:text-sm break-all"
+                                >
                                     {personalInfo.email}
                                 </a>
                             </div>

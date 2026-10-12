@@ -23,12 +23,23 @@ export const personalInfo = {
     resumeUrl: '/resume.pdf', // Place a resume.pdf in client/public/
 };
 
+export const createGmailLink = ({ to = personalInfo.email, subject = 'Portfolio Inquiry', body = '' } = {}) => {
+    const gmailBase = 'https://mail.google.com/mail/?view=cm&fs=1';
+    const params = new URLSearchParams({
+        to,
+        su: subject,
+        body,
+    });
+
+    return `${gmailBase}&${params.toString()}`;
+};
+
 export const education = [
     {
         institution: 'VIT AP CAMPUS, Amaravati',
         degree: 'M.Tech (Integrated) in CSE',
         period: '2021-2026',
-        score: 'CGPA: 7.50/10',
+        score: 'CGPA: 7.68/10',
     },
     {
         institution: 'Akansha Junior College',
@@ -69,9 +80,9 @@ export const activities = [
 ];
 
 export const navLinks = [
-    { label: 'Terminal', href: '#hero', shortcut: '0' },
-    { label: 'About', href: '#about', shortcut: '1' },
-    { label: 'Projects', href: '#projects', shortcut: '2' },
-    { label: 'Skills', href: '#skills', shortcut: '3' },
-    { label: 'Contact', href: '#contact', shortcut: '4' },
+    { label: 'Terminal', href: '#hero' },
+    { label: 'About', href: '#about' },
+    { label: 'Projects', href: '#projects' },
+    { label: 'Skills', href: '#skills' },
+    { label: 'Contact', href: '#contact' },
 ];
