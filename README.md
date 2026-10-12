@@ -101,4 +101,4 @@ The project is configured for Netlify and can be deployed using the existing `ne
 Syed Shujatullah
 
 - GitHub: https://github.com/Shujju5583X
-- Portfolio: https://shujatullah.netlify.app/
+- Portfolio: https://shujatullahsyed.netlify.app/
